@@ -16,15 +16,15 @@ require Exporter;
 
 @EXPORT_OK = qw();
 
-$VERSION = '4.2';
+$VERSION = '5.0';
 
 use Carp;
 
-use Bit::Vector;
+use Bit::Vector 5.0;
 
 use overload
      'neg' => '_complement',
-       '~' => '_complement',
+       '~' => '_transpose',
     'bool' => '_boolean',
        '!' => '_not_boolean',
       '""' => '_string',
@@ -520,6 +520,25 @@ sub Complement
     }
 }
 
+sub Transpose
+{
+    croak "Usage: \$matrix1->Transpose(\$matrix2);"
+      if (@_ != 2);
+
+    my($matrix1,$matrix2) = @_;
+    my($rows1,$cols1) = ($matrix1->[1],$matrix1->[2]);
+    my($rows2,$cols2) = ($matrix2->[1],$matrix2->[2]);
+
+    if (($rows1 == $cols2) && ($cols1 == $rows2))
+    {
+        $matrix1->[0]->Transpose($rows1,$cols1,$matrix2->[0],$rows2,$cols2);
+    }
+    else
+    {
+        croak "Math::MatrixBool::Transpose(): matrix size mismatch";
+    }
+}
+
 sub equal
 {
     croak "Usage: \$boolean = \$matrix1->equal(\$matrix2);"
@@ -654,11 +673,22 @@ sub Clone
 sub _complement
 {
     my($object,$argument,$flag) = @_;
-#   my($name) = "'~'"; #&_trace($name,$object,$argument,$flag);
+#   my($name) = "neg"; #&_trace($name,$object,$argument,$flag);
     my($result);
 
     $result = $object->new($object->[1],$object->[2]);
     $result->Complement($object);
+    return($result);
+}
+
+sub _transpose
+{
+    my($object,$argument,$flag) = @_;
+#   my($name) = "'~'"; #&_trace($name,$object,$argument,$flag);
+    my($result);
+
+    $result = $object->new($object->[2],$object->[1]);
+    $result->Transpose($object);
     return($result);
 }
 
@@ -712,8 +742,7 @@ sub _addition
     my($name) = "'+'"; #&_trace($name,$object,$argument,$flag);
     my($result);
 
-    if ((defined $argument) && ref($argument) &&
-        (ref($argument) !~ /^SCALAR$|^ARRAY$|^HASH$|^CODE$|^REF$/))
+    if ((defined $argument) && ref($argument) && (ref($argument) !~ /^[A-Z]+$/))
     {
         if (defined $flag)
         {
@@ -739,8 +768,7 @@ sub _multiplication
     my($name) = "'*'"; #&_trace($name,$object,$argument,$flag);
     my($result);
 
-    if ((defined $argument) && ref($argument) &&
-        (ref($argument) !~ /^SCALAR$|^ARRAY$|^HASH$|^CODE$|^REF$/))
+    if ((defined $argument) && ref($argument) && (ref($argument) !~ /^[A-Z]+$/))
     {
         if ((defined $flag) && $flag)
         {
@@ -763,8 +791,7 @@ sub _union
     my($name) = "'|'"; #&_trace($name,$object,$argument,$flag);
     my($result);
 
-    if ((defined $argument) && ref($argument) &&
-        (ref($argument) !~ /^SCALAR$|^ARRAY$|^HASH$|^CODE$|^REF$/))
+    if ((defined $argument) && ref($argument) && (ref($argument) !~ /^[A-Z]+$/))
     {
         if (defined $flag)
         {
@@ -790,8 +817,7 @@ sub _difference
     my($name) = "'-'"; #&_trace($name,$object,$argument,$flag);
     my($result);
 
-    if ((defined $argument) && ref($argument) &&
-        (ref($argument) !~ /^SCALAR$|^ARRAY$|^HASH$|^CODE$|^REF$/))
+    if ((defined $argument) && ref($argument) && (ref($argument) !~ /^[A-Z]+$/))
     {
         if (defined $flag)
         {
@@ -818,8 +844,7 @@ sub _intersection
     my($name) = "'&'"; #&_trace($name,$object,$argument,$flag);
     my($result);
 
-    if ((defined $argument) && ref($argument) &&
-        (ref($argument) !~ /^SCALAR$|^ARRAY$|^HASH$|^CODE$|^REF$/))
+    if ((defined $argument) && ref($argument) && (ref($argument) !~ /^[A-Z]+$/))
     {
         if (defined $flag)
         {
@@ -845,8 +870,7 @@ sub _exclusive_or
     my($name) = "'^'"; #&_trace($name,$object,$argument,$flag);
     my($result);
 
-    if ((defined $argument) && ref($argument) &&
-        (ref($argument) !~ /^SCALAR$|^ARRAY$|^HASH$|^CODE$|^REF$/))
+    if ((defined $argument) && ref($argument) && (ref($argument) !~ /^[A-Z]+$/))
     {
         if (defined $flag)
         {
@@ -919,8 +943,7 @@ sub _equal
     my($object,$argument,$flag) = @_;
     my($name) = "'=='"; #&_trace($name,$object,$argument,$flag);
 
-    if ((defined $argument) && ref($argument) &&
-        (ref($argument) !~ /^SCALAR$|^ARRAY$|^HASH$|^CODE$|^REF$/))
+    if ((defined $argument) && ref($argument) && (ref($argument) !~ /^[A-Z]+$/))
     {
         return( $object->equal($argument) );
     }
@@ -935,8 +958,7 @@ sub _not_equal
     my($object,$argument,$flag) = @_;
     my($name) = "'!='"; #&_trace($name,$object,$argument,$flag);
 
-    if ((defined $argument) && ref($argument) &&
-        (ref($argument) !~ /^SCALAR$|^ARRAY$|^HASH$|^CODE$|^REF$/))
+    if ((defined $argument) && ref($argument) && (ref($argument) !~ /^[A-Z]+$/))
     {
         return( !($object->equal($argument)) );
     }
@@ -951,8 +973,7 @@ sub _true_sub_set
     my($object,$argument,$flag) = @_;
     my($name) = "'<'"; #&_trace($name,$object,$argument,$flag);
 
-    if ((defined $argument) && ref($argument) &&
-        (ref($argument) !~ /^SCALAR$|^ARRAY$|^HASH$|^CODE$|^REF$/))
+    if ((defined $argument) && ref($argument) && (ref($argument) !~ /^[A-Z]+$/))
     {
         if ((defined $flag) && $flag)
         {
@@ -976,8 +997,7 @@ sub _sub_set
     my($object,$argument,$flag) = @_;
     my($name) = "'<='"; #&_trace($name,$object,$argument,$flag);
 
-    if ((defined $argument) && ref($argument) &&
-        (ref($argument) !~ /^SCALAR$|^ARRAY$|^HASH$|^CODE$|^REF$/))
+    if ((defined $argument) && ref($argument) && (ref($argument) !~ /^[A-Z]+$/))
     {
         if ((defined $flag) && $flag)
         {
@@ -999,8 +1019,7 @@ sub _true_super_set
     my($object,$argument,$flag) = @_;
     my($name) = "'>'"; #&_trace($name,$object,$argument,$flag);
 
-    if ((defined $argument) && ref($argument) &&
-        (ref($argument) !~ /^SCALAR$|^ARRAY$|^HASH$|^CODE$|^REF$/))
+    if ((defined $argument) && ref($argument) && (ref($argument) !~ /^[A-Z]+$/))
     {
         if ((defined $flag) && $flag)
         {
@@ -1024,8 +1043,7 @@ sub _super_set
     my($object,$argument,$flag) = @_;
     my($name) = "'>='"; #&_trace($name,$object,$argument,$flag);
 
-    if ((defined $argument) && ref($argument) &&
-        (ref($argument) !~ /^SCALAR$|^ARRAY$|^HASH$|^CODE$|^REF$/))
+    if ((defined $argument) && ref($argument) && (ref($argument) !~ /^[A-Z]+$/))
     {
         if ((defined $flag) && $flag)
         {
@@ -1047,8 +1065,7 @@ sub _compare
     my($object,$argument,$flag) = @_;
     my($name) = "cmp"; #&_trace($name,$object,$argument,$flag);
 
-    if ((defined $argument) && ref($argument) &&
-        (ref($argument) !~ /^SCALAR$|^ARRAY$|^HASH$|^CODE$|^REF$/))
+    if ((defined $argument) && ref($argument) && (ref($argument) !~ /^[A-Z]+$/))
     {
         if ((defined $flag) && $flag)
         {
@@ -1441,6 +1458,15 @@ calculates the complement of matrix2 and stores the result in matrix1
 
 =item *
 
+C<$matrix1-E<gt>Transpose($matrix2);>
+
+calculates the transpose of matrix2 and stores the result in matrix1
+(in-place is also possible if and only if the matrix is quadratic!);
+in general, matrix1 must have reversed numbers of rows and columns
+in relation to matrix2
+
+=item *
+
 C<$boolean = $matrix1-E<gt>equal($matrix2);>
 
 tests if matrix1 is the same as matrix2
@@ -1597,15 +1623,15 @@ and will produce an error message.
 
 =item '-'
 
-Unary Minus ( C<$matrix2 = -$matrix1;> )
+Unary Minus / Complement ( C<$matrix2 = -$matrix1;> )
 
-Same as "Complement". See "Complement" below.
+The unary operator '-' computes the complement of the given matrix.
 
 =item '~'
 
-Complement ( C<$matrix2 = ~$matrix1;> )
+Transpose ( C<$matrix2 = ~$matrix1;> )
 
-The operator '~' (or unary '-') computes the complement of the given matrix.
+The operator '~' computes the transpose of the given matrix.
 
 =item abs
 
@@ -1932,7 +1958,7 @@ Math::Kleene(3), Set::IntegerFast(3), Set::IntegerRange(3).
 
 =head1 VERSION
 
-This man page documents "Math::MatrixBool" version 4.2.
+This man page documents "Math::MatrixBool" version 5.0.
 
 =head1 AUTHOR
 

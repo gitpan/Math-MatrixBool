@@ -1,5 +1,5 @@
                    =========================================
-                     Module "Math::MatrixBool" Version 4.2
+                     Module "Math::MatrixBool" Version 5.0
                    =========================================
                        for Perl version 5.000 and higher
 
@@ -11,7 +11,7 @@
 Prerequisites:
 --------------
 
-Perl version 5.000 or higher, module "Bit::Vector" (!).
+Perl version 5.004 or higher, module "Bit::Vector" version 5.0 or higher.
 
 
 Installation:
@@ -35,7 +35,14 @@ thereafter.
 Version history:
 ----------------
 
-See the file "CHANGES" in the "Bit::Vector" distribution for a log of
+In version 5.0, a method "Transpose()" has been added. The behaviour of
+the overloaded operator "~" has been changed accordingly to return the
+transpose of the given matrix instead of the complement (as it was before).
+
+(The complement is still returned by the overloaded unary minus operator "-",
+as before.)
+
+See also the file "CHANGES" in the "Bit::Vector" distribution for a log of
 previous versions.
 
 
