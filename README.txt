@@ -1,9 +1,11 @@
                    =========================================
-                     Module "Math::MatrixBool" Version 5.0
+                     Module "Math::MatrixBool" Version 5.7
                    =========================================
                        for Perl version 5.000 and higher
 
-     Copyright (c) 1995, 1996, 1997 by Steffen Beyer. All rights reserved.
+         Copyright (c) 1995, 1996, 1997, 1998, 1999 by Steffen Beyer.
+                             All rights reserved.
+
      This package is free software; you can redistribute it and/or modify
      it under the same terms as Perl itself.
 
@@ -11,7 +13,7 @@
 Prerequisites:
 --------------
 
-Perl version 5.004 or higher, module "Bit::Vector" version 5.0 or higher.
+Perl version 5.000 or higher, module "Bit::Vector" version 5.7 or higher.
 
 
 Installation:
@@ -24,26 +26,26 @@ Simply install this module using the following commands:
                             % make test
                             % make install
 
+(Under Windows NT, use "nmake" or "dmake" instead of "make".)
+
 
 Documentation:
 --------------
 
 To see the module's documentation, use the command "man Math::MatrixBool"
-thereafter.
+(Unix) or "perldoc Math::MatrixBool" (both Unix and Win32) thereafter.
 
 
 Version history:
 ----------------
 
-In version 5.0, a method "Transpose()" has been added. The behaviour of
-the overloaded operator "~" has been changed accordingly to return the
-transpose of the given matrix instead of the complement (as it was before).
+In version 5.7, the method "Product()" has been added. This is the same
+as the method "Multiplication()", except that it uses the binary or ("|")
+operation instead of the binary "xor" ("^") operation as the boolean
+addition operator ("+").
 
-(The complement is still returned by the overloaded unary minus operator "-",
-as before.)
-
-See also the file "CHANGES" in the "Bit::Vector" distribution for a log of
-previous versions.
+See the file "CHANGES.txt" in the "Bit::Vector" distribution for a log
+of previous versions.
 
 
 Author's note:

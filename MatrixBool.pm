@@ -1,5 +1,6 @@
 
-#  Copyright (c) 1996, 1997 by Steffen Beyer. All rights reserved.
+#  Copyright (c) 1995, 1996, 1997, 1998, 1999 by Steffen Beyer.
+#  All rights reserved.
 #  This package is free software; you can redistribute it and/or
 #  modify it under the same terms as Perl itself.
 
@@ -16,11 +17,11 @@ require Exporter;
 
 @EXPORT_OK = qw();
 
-$VERSION = '5.0';
+$VERSION = '5.7';
 
 use Carp;
 
-use Bit::Vector 5.0;
+use Bit::Vector 5.7;
 
 use overload
      'neg' => '_complement',
@@ -388,12 +389,36 @@ sub Multiplication
     {
         $result = $matrix1->new($rows1,$cols2);
         $result->[0]->Multiplication($rows1,$cols2,
-                     $matrix1->[0],$rows1,$cols1,
-                     $matrix2->[0],$rows2,$cols2);
+                       $matrix1->[0],$rows1,$cols1,
+                       $matrix2->[0],$rows2,$cols2);
     }
     else
     {
         croak "Math::MatrixBool::Multiplication(): matrix size mismatch";
+    }
+    return($result);
+}
+
+sub Product
+{
+    croak "Usage: \$product_matrix = \$matrix1->Product(\$matrix2);"
+      if (@_ != 2);
+
+    my($matrix1,$matrix2) = @_;
+    my($rows1,$cols1) = ($matrix1->[1],$matrix1->[2]);
+    my($rows2,$cols2) = ($matrix2->[1],$matrix2->[2]);
+    my($result);
+
+    if ($cols1 == $rows2)
+    {
+        $result = $matrix1->new($rows1,$cols2);
+        $result->[0]->Product($rows1,$cols2,
+                $matrix1->[0],$rows1,$cols1,
+                $matrix2->[0],$rows2,$cols2);
+    }
+    else
+    {
+        croak "Math::MatrixBool::Product(): matrix size mismatch";
     }
     return($result);
 }
@@ -407,7 +432,7 @@ sub Kleene
     my($rows,$cols) = ($matrix->[1],$matrix->[2]);
     my($result);
 
-    croak "Math::MatrixBool::Kleene(): matrix is not quadratic"
+    croak "Math::MatrixBool::Kleene(): not a square matrix"
       if ($rows != $cols);
 
     $result = $matrix->new($rows,$cols);
@@ -1306,7 +1331,7 @@ C<$matrix-E<gt>One();>
 fills the matrix with one's in the main diagonal and zero's elsewhere
 
 Note that multiplying this matrix with itself yields the same matrix again
-(provided it is quadratic)!
+(provided it is a square matrix)!
 
 =item *
 
@@ -1392,7 +1417,16 @@ calculates the sum of matrix2 and matrix3 and stores the result in matrix1
 C<$product_matrix = $matrix1-E<gt>Multiplication($matrix2);>
 
 calculates the product of matrix1 and matrix2 and returns an object reference
-to a new matrix where the result is stored
+to a new matrix where the result is stored; uses "C<^>" as boolean addition
+operator internally
+
+=item *
+
+C<$product_matrix = $matrix1-E<gt>Product($matrix2);>
+
+calculates the product of matrix1 and matrix2 and returns an object reference
+to a new matrix where the result is stored; uses "C<|>" as boolean addition
+operator internally
 
 =item *
 
@@ -1461,7 +1495,7 @@ calculates the complement of matrix2 and stores the result in matrix1
 C<$matrix1-E<gt>Transpose($matrix2);>
 
 calculates the transpose of matrix2 and stores the result in matrix1
-(in-place is also possible if and only if the matrix is quadratic!);
+(in-place is also possible if and only if the matrix is a square matrix!);
 in general, matrix1 must have reversed numbers of rows and columns
 in relation to matrix2
 
@@ -1958,7 +1992,7 @@ Math::Kleene(3), Set::IntegerFast(3), Set::IntegerRange(3).
 
 =head1 VERSION
 
-This man page documents "Math::MatrixBool" version 5.0.
+This man page documents "Math::MatrixBool" version 5.7.
 
 =head1 AUTHOR
 
@@ -1966,7 +2000,8 @@ Steffen Beyer <sb@sdm.de>.
 
 =head1 COPYRIGHT
 
-Copyright (c) 1996, 1997 by Steffen Beyer. All rights reserved.
+Copyright (c) 1995, 1996, 1997, 1998, 1999 by Steffen Beyer.
+All rights reserved.
 
 =head1 LICENSE AGREEMENT
 

@@ -11,7 +11,7 @@ use Math::MatrixBool;
 #   $transpose->Transpose($matrix);
 # ======================================================================
 
-print "1..45\n";
+print "1..73\n";
 
 $n = 1;
 
@@ -119,8 +119,12 @@ $sum = $matrix->Shadow();
 $prod->One();
 $sum->One();
 
-for ( $i = 0; $i < 8; $i++ )
+for ( $i = 0; $i < 7; $i++ )
 {
+    if (! $sum->equal($test))
+    { print "ok $n\n"; } else { print "not ok $n\n"; }
+    $n++;
+
     $prod = $prod->Multiplication($matrix);
     $sum->Union($sum,$prod);
 }
@@ -128,6 +132,8 @@ for ( $i = 0; $i < 8; $i++ )
 if ($sum->equal($test))
 { print "ok $n\n"; } else { print "not ok $n\n"; }
 $n++;
+
+&check_product();
 
 $matrix->Bit_On(3,5);
 
@@ -146,8 +152,12 @@ $sum = $matrix->Shadow();
 $prod->One();
 $sum->One();
 
-for ( $i = 0; $i < 8; $i++ )
+for ( $i = 0; $i < 7; $i++ )
 {
+    if (! $sum->equal($test))
+    { print "ok $n\n"; } else { print "not ok $n\n"; }
+    $n++;
+
     $prod *= $matrix;
     $sum |= $prod;
 }
@@ -155,6 +165,8 @@ for ( $i = 0; $i < 8; $i++ )
 if ($sum->equal($test))
 { print "ok $n\n"; } else { print "not ok $n\n"; }
 $n++;
+
+&check_product();
 
 $x1 = Math::MatrixBool->new_from_string(<<"MATRIX");
 [ 1 1 0 ]
@@ -345,21 +357,47 @@ $n++;
 
 eval { $y->Transpose($y); };
 
-if ($@ =~ /^Math::MatrixBool::Transpose\(\): matrix size mismatch/)
+if ($@ =~ /Math::MatrixBool::Transpose\(\): matrix size mismatch/)
 { print "ok $n\n"; } else { print "not ok $n\n"; }
 $n++;
 
 eval { $y->[0]->Transpose($y->[1],$y->[2],$y->[0],$y->[1],$y->[2]); };
 
-if ($@ =~ /^Bit::Vector::Transpose\(\): matrix size mismatch/)
+if ($@ =~ /Bit::Vector::Transpose\(\): matrix size mismatch/)
 { print "ok $n\n"; } else { print "not ok $n\n"; }
 $n++;
 
 eval { $y->[0]->Transpose($y->[2],$y->[1],$y->[0],$y->[1],$y->[2]); };
 
-if ($@ =~ /^Bit::Vector::Transpose\(\): matrix is not quadratic/)
+if ($@ =~ /Bit::Vector::Transpose\(\): not a square matrix/)
 { print "ok $n\n"; } else { print "not ok $n\n"; }
 $n++;
+
+exit;
+
+sub check_product
+{
+    my($prod,$base,$i);
+
+    $prod = $matrix->Clone();
+    $base = $matrix->Shadow();
+    $base->One();
+    $prod->Union($prod,$base);
+    $base->Copy($prod);
+
+    for ( $i = 0; $i < 6; $i++ )
+    {
+        if (! $prod->equal($test))
+        { print "ok $n\n"; } else { print "not ok $n\n"; }
+        $n++;
+
+        $prod = $prod->Product($base);
+    }
+
+    if ($prod->equal($test))
+    { print "ok $n\n"; } else { print "not ok $n\n"; }
+    $n++;
+}
 
 __END__
 

@@ -2,6 +2,6 @@ Kleene.pod
 MANIFEST
 Makefile.PL
 MatrixBool.pm
-README
+README.txt
 t/00____version.t
 t/01___external.t
