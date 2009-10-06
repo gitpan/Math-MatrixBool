@@ -1,5 +1,5 @@
 
-#  Copyright (c) 1995, 1996, 1997, 1998, 1999 by Steffen Beyer.
+#  Copyright (c) 1995 - 2009 by Steffen Beyer.
 #  All rights reserved.
 #  This package is free software; you can redistribute it and/or
 #  modify it under the same terms as Perl itself.
@@ -17,11 +17,11 @@ require Exporter;
 
 @EXPORT_OK = qw();
 
-$VERSION = '5.7';
+$VERSION = '5.8';
 
 use Carp;
 
-use Bit::Vector 5.7;
+use Bit::Vector 7.1;
 
 use overload
      'neg' => '_complement',
@@ -1992,15 +1992,15 @@ Math::Kleene(3), Set::IntegerFast(3), Set::IntegerRange(3).
 
 =head1 VERSION
 
-This man page documents "Math::MatrixBool" version 5.7.
+This man page documents "Math::MatrixBool" version 5.8.
 
 =head1 AUTHOR
 
-Steffen Beyer <sb@sdm.de>.
+Steffen Beyer <STBEY@cpan.org>.
 
 =head1 COPYRIGHT
 
-Copyright (c) 1995, 1996, 1997, 1998, 1999 by Steffen Beyer.
+Copyright (c) 1995 - 2009 by Steffen Beyer.
 All rights reserved.
 
 =head1 LICENSE AGREEMENT

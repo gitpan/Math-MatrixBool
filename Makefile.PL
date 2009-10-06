@@ -4,7 +4,7 @@ use ExtUtils::MakeMaker;
 WriteMakefile(
     'NAME'		=> 'Math::MatrixBool',
     'VERSION_FROM'	=> 'MatrixBool.pm', # finds $VERSION
-    'PREREQ_PM'		=> { 'Bit::Vector' => 5.7 },
+    'PREREQ_PM'		=> { 'Bit::Vector' => 7.1 },
     'LIBS'		=> [''],   # e.g., '-lm'
     'DEFINE'		=> '',     # e.g., '-DHAVE_SOMETHING'
     'INC'		=> '',     # e.g., '-I/usr/include/other'
